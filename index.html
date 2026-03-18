@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh">
+    <head>
+        <meta  charset="UTF-8">
+        <title>圈圈叉叉</title>
+        <link rel="stylesheet" href="practice.css">
+    </head>
+    <body>
+        <h1>圈圈叉叉</h1>
+        
+        <!-- 起始畫面 -->
+        <div id="start-screen">
+            <h2>請選擇遊戲模式</h2>
+            <div id="difficulty-controls">
+                <button id="diff-easy" class="level">簡單</button>
+                <button id="diff-normal" class="level">普通</button>
+                <button id="diff-hard" class="level">困難</button>
+            </div>
+            <button id="mode-pvp" class = "mode">雙人對戰 (PvP)</button>
+            <button id="mode-pve" class = "mode">電腦對戰 (PvE)</button>
+        </div>
+
+        <!-- 遊戲畫面 (預設隱藏) -->
+        <div id="game-screen" class="hidden">
+            <div id="board">
+                <div class="cell"></div>
+                <div class="cell"></div>
+                <div class="cell"></div>
+                <div class="cell"></div>
+                <div class="cell"></div>
+                <div class="cell"></div>
+                <div class="cell"></div>
+                <div class="cell"></div>
+                <div class="cell"></div>
+            </div>
+            <p id="status">玩家 X 的回合</p>
+            <div>玩家 X 的得分：<span id="x-score">0</span></div>
+            <div>玩家 O 的得分：<span id="o-score">0</span></div>
+            <button id="restart">重新開始</button>
+            <button id="back-to-menu">回主選單</button>
+        </div>
+
+        <!-- 結算畫面遮罩 -->
+        <div id="result-modal" class="modal hidden">
+            <div class="modal-content">
+                <h2 id="result-message">遊戲結束</h2>
+                <div class="score-board">
+                    <p>玩家 X 勝場: <span id="x-score-modal"></span></p>
+                    <p>玩家 O 勝場: <span id="o-score-modal"></span></p>
+                </div>
+                <button id="new-game-btn">下一局</button>
+            </div>
+        </div>
+
+        <script type="module" src="practice.js"></script>
+    </body>
+</html>
