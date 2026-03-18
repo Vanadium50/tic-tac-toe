@@ -1,0 +1,215 @@
+
+/* c:\Users\Vicky\Desktop\html\PRACTICE\practice.css */
+
+/* --- 全域設定 --- */
+:root {
+    --bg-color: #2c3e50;       /* 深藍灰背景 */
+    --text-color: #ecf0f1;     /* 淺灰白文字 */
+    --primary-btn: #3498db;    /* 藍色按鈕 */
+    --btn-hover: #2980b9;      /* 按鈕懸停深藍 */
+    --accent-color: #e67e22;   /* 橘色 (難度選中/強調) */
+    --board-bg: #34495e;       /* 棋盤背景 */
+    --cell-bg: #2c3e50;        /* 格子顏色 */
+    --x-color: #e74c3c;        /* X 的顏色 (紅) */
+    --o-color: #f1c40f;        /* O 的顏色 (黃) */
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    letter-spacing: 2px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+h2 {
+    margin-bottom: 15px;
+}
+
+/* --- 通用按鈕樣式 --- */
+button {
+    font-size: 1rem;
+    padding: 10px 20px;
+    margin: 5px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: var(--primary-btn);
+    color: white;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+button:hover {
+    background-color: var(--btn-hover);
+    transform: translateY(-2px);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+/* --- 隱藏類別 (重要) --- */
+.hidden {
+    display: none !important;
+}
+
+/* --- 開始畫面設定 --- */
+#start-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 40px;
+    border-radius: 15px;
+    backdrop-filter: blur(5px);
+}
+
+#difficulty-controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+/* 難度按鈕樣式 */
+.level {
+    background-color: #7f8c8d; /* 未選中時是灰色 */
+    opacity: 0.7;
+}
+
+.level:hover {
+    background-color: #95a5a6;
+}
+
+/* 選中時的難度樣式 (JS 會加入 active class) */
+.level.active {
+    background-color: var(--accent-color);
+    opacity: 1;
+    font-weight: bold;
+    transform: scale(1.1);
+    box-shadow: 0 0 10px var(--accent-color);
+}
+
+.mode {
+    width: 200px;
+    font-size: 1.2rem;
+    padding: 15px;
+}
+
+/* --- 遊戲畫面 --- */
+#game-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#board {
+    display: grid;
+    grid-template-columns: repeat(3, 100px);
+    grid-template-rows: repeat(3, 100px);
+    gap: 10px;
+    background-color: var(--board-bg);
+    padding: 10px;
+    border-radius: 10px;
+    margin: 20px 0;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+.cell {
+    width: 100px;
+    height: 100px;
+    background-color: var(--cell-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.2s;
+}
+
+.cell:hover {
+    background-color: #34495e; /* 稍微變亮 */
+}
+
+/* 透過 JS 加入 class 後，我們可以分開設定顏色 */
+.cell.X {
+    color: var(--x-color);
+}
+
+.cell.O {
+    color: var(--o-color);
+}
+
+#status {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+.score-board {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 15px;
+    font-size: 1.2rem;
+}
+
+/* --- 結算模態視窗 (Modal) --- */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7); /* 半透明黑背景 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    animation: fadeIn 0.3s;
+}
+
+.modal-content {
+    background-color: white;
+    color: #2c3e50;
+    padding: 40px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+    max-width: 400px;
+    width: 80%;
+}
+
+.modal-content h2 {
+    font-size: 2rem;
+    color: var(--bg-color);
+    margin-bottom: 20px;
+}
+
+.modal-content p {
+    font-size: 1.2rem;
+    margin: 10px 0;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}

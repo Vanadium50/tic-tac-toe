@@ -6,6 +6,7 @@ export const elements = {
     gameScreen: document.getElementById("game-screen"),
     modePvpBtn: document.getElementById("mode-pvp"),
     modePveBtn: document.getElementById("mode-pve"),
+    modeInfiniteBtn: document.getElementById("mode-infinite"),
     backToMenuBtn: document.getElementById("back-to-menu"),
     cells: document.querySelectorAll(".cell"),
     statusText: document.getElementById("status"),
@@ -31,8 +32,9 @@ export const elements = {
 // 更新單個格子的顯示內容
 export function updateCell(index, player) {
     elements.cells[index].textContent = player;
-    // 新增類別以套用特定顏色 (例如 .X 或 .O)
-    elements.cells[index].classList.add(player);
+    elements.cells[index].classList.remove("X", "O"); // 先移除舊的類別
+    // 如果 player 有值 (X 或 O)，才新增類別
+    if (player) elements.cells[index].classList.add(player);
 }
 
 // 更新遊戲狀態文字 (例如: 輪到誰、獲勝訊息)
