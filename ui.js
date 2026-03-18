@@ -2,11 +2,18 @@
 
 // 定義並快取 DOM 元素，避免重複查詢 DOM，提升效能
 export const elements = {
+    // 畫面
     startScreen: document.getElementById("start-screen"),
+    mainMenu: document.getElementById("main-menu"),
+    modeSelectionScreen: document.getElementById("mode-selection-screen"),
     gameScreen: document.getElementById("game-screen"),
-    modePvpBtn: document.getElementById("mode-pvp"),
-    modePveBtn: document.getElementById("mode-pve"),
-    modeInfiniteBtn: document.getElementById("mode-infinite"),
+
+    // 按鈕
+    selectPvpBtn: document.getElementById("select-pvp"),
+    selectPveBtn: document.getElementById("select-pve"),
+    startNormalGameBtn: document.getElementById("start-normal-game"),
+    startInfiniteGameBtn: document.getElementById("start-infinite-game"),
+    backToMainMenuBtn: document.getElementById("back-to-main-menu"),
     backToMenuBtn: document.getElementById("back-to-menu"),
     cells: document.querySelectorAll(".cell"),
     statusText: document.getElementById("status"),
@@ -14,6 +21,8 @@ export const elements = {
     resultModal: document.getElementById("result-modal"),
     resultMessage: document.getElementById("result-message"),
     newGameBtn: document.getElementById("new-game-btn"),
+
+    // 其他
     scoreEls: {
         X: document.getElementById("x-score"),
         O: document.getElementById("o-score")
@@ -22,6 +31,7 @@ export const elements = {
         X: document.getElementById("x-score-modal"),
         O: document.getElementById("o-score-modal")
     },
+    difficultyContainer: document.getElementById("difficulty-controls"),
     difficultyBtns: {
         Easy: document.getElementById("diff-easy"),
         Normal: document.getElementById("diff-normal"),
@@ -60,18 +70,42 @@ export function hideResultModal() {
     elements.resultModal.classList.add("hidden");
 }
 
-// 切換到遊戲畫面 (隱藏開始畫面)
-export function showGameScreen() {
+// --- 畫面切換 ---
+
+// 隱藏所有頂層畫面容器
+function hideTopLevelScreens() {
     elements.startScreen.classList.add("hidden");
+    elements.gameScreen.classList.add("hidden");
+}
+
+// 顯示主選單畫面 (第一步)
+export function showMainMenu() {
+    hideTopLevelScreens();
+    elements.startScreen.classList.remove("hidden"); // 顯示選單外框
+
+    // 確保只顯示第一步的選單
+    elements.mainMenu.classList.remove("hidden");
+    elements.modeSelectionScreen.classList.add("hidden");
+}
+
+// 顯示模式選擇畫面 (第二步)
+export function showModeSelectionScreen(isPve) {
+    // 假設此時 startScreen 已經是可見的，我們只切換內部畫面
+    elements.mainMenu.classList.add("hidden");
+    elements.modeSelectionScreen.classList.remove("hidden");
+
+    if (isPve) {
+        elements.difficultyContainer.classList.remove("hidden");
+    } else {
+        elements.difficultyContainer.classList.add("hidden");
+    }
+}
+
+// 顯示遊戲畫面
+export function showGameScreen() { 
+    hideTopLevelScreens();
     elements.gameScreen.classList.remove("hidden");
 }
-
-// 切換到開始畫面 (隱藏遊戲畫面)
-export function showStartScreen() {
-    elements.gameScreen.classList.add("hidden");
-    elements.startScreen.classList.remove("hidden");
-}
-
 // 清空棋盤上所有格子的內容
 export function clearBoardUI() {
     elements.cells.forEach(cell => {

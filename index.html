@@ -3,22 +3,33 @@
     <head>
         <meta  charset="UTF-8">
         <title>圈圈叉叉</title>
-        <link rel="stylesheet" href="practice.css">
+        <link rel="stylesheet" href="style.css">
     </head>
     <body>
         <h1>圈圈叉叉</h1>
         
-        <!-- 起始畫面 -->
+        <!-- Start Screen Container -->
         <div id="start-screen">
-            <h2>請選擇遊戲模式</h2>
-            <div id="difficulty-controls">
-                <button id="diff-easy" class="level">簡單</button>
-                <button id="diff-normal" class="level">普通</button>
-                <button id="diff-hard" class="level">困難</button>
+            <!-- Screen 1: Main Menu -->
+            <div id="main-menu">
+                <h2>請選擇對手</h2>
+                <button id="select-pvp" class="mode">雙人對戰</button>
+                <button id="select-pve" class="mode">電腦對戰</button>
             </div>
-            <button id="mode-pvp" class = "mode">雙人對戰 (PvP)</button>
-            <button id="mode-pve" class = "mode">電腦對戰 (PvE)</button>
-            <button id="mode-infinite" class="mode">無限模式 (雙人)</button>
+
+            <!-- Screen 2: Mode & Difficulty Selection (initially hidden) -->
+            <div id="mode-selection-screen" class="hidden">
+                <h2>請選擇遊戲模式</h2>
+                <div id="difficulty-controls" class="hidden">
+                    <h3>請選擇難度</h3>
+                    <button id="diff-easy" class="level">簡單</button>
+                    <button id="diff-normal" class="level">普通</button>
+                    <button id="diff-hard" class="level">困難</button>
+                </div>
+                <button id="start-normal-game" class="mode">一般模式</button>
+                <button id="start-infinite-game" class="mode">無限模式</button>
+                <button id="back-to-main-menu">返回上一步</button>
+            </div>
         </div>
 
         <!-- 遊戲畫面 (預設隱藏) -->
@@ -53,6 +64,6 @@
             </div>
         </div>
 
-        <script type="module" src="practice.js"></script>
+        <script type="module" src="main.js"></script>
     </body>
 </html>

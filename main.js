@@ -2,10 +2,15 @@ import { gameState, resetRoundState, resetAllState } from './state.js';
 import * as UI from './ui.js';
 import { checkWin, getBestMove } from './logic.js';
 
+// 暫存遊戲設定選項
+const gameSetup = {
+    playerType: null // 'PVP' or 'PVE'
+};
+
 // --- 初始化與事件綁定 ---
 function initialize() {
     UI.updateDifficultyUI(gameState.difficulty);
-    returnToMenu(); // 呼叫 returnToMenu 可重置畫面到主選單並清空分數
+    returnToMainMenu(); // 呼叫 returnToMainMenu 可重置畫面到主選單並清空分數
 }
 
 // 綁定事件
@@ -13,17 +18,40 @@ UI.elements.cells.forEach((cell, index) => {
     cell.addEventListener("click", () => handleCellClick(cell, index));
 });
 
-// 模式選擇按鈕
-UI.elements.modePvpBtn.addEventListener("click", () => startGame("PVP"));
-UI.elements.modePveBtn.addEventListener("click", () => startGame("PVE"));
-UI.elements.modeInfiniteBtn.addEventListener("click", () => startGame("INFINITE"));
-UI.elements.backToMenuBtn.addEventListener("click", returnToMenu);
+// --- 畫面流程事件綁定 ---
+
+// 1. 主選單：選擇對手
+UI.elements.selectPvpBtn.addEventListener("click", () => {
+    gameSetup.playerType = 'PVP';
+    UI.showModeSelectionScreen(false); // 雙人對戰，隱藏難度選項
+});
+
+UI.elements.selectPveBtn.addEventListener("click", () => {
+    gameSetup.playerType = 'PVE';
+    UI.showModeSelectionScreen(true); // 電腦對戰，顯示難度選項
+});
+
+// 2. 模式選擇：選擇一般/無限，並開始遊戲
+UI.elements.startNormalGameBtn.addEventListener("click", () => {
+    const mode = gameSetup.playerType === 'PVE' ? 'PVE' : 'PVP';
+    startGame(mode);
+});
+
+UI.elements.startInfiniteGameBtn.addEventListener("click", () => {
+    const mode = gameSetup.playerType === 'PVE' ? 'PVE_INFINITE' : 'INFINITE';
+    startGame(mode);
+});
+
+UI.elements.backToMainMenuBtn.addEventListener("click", returnToMainMenu);
 
 // 遊戲控制按鈕 (重新開始)
 UI.elements.restartButton.addEventListener("click", restartGame);
 if (UI.elements.newGameBtn) {
     UI.elements.newGameBtn.addEventListener("click", restartGame);
 }
+
+// 遊戲中返回主選單
+UI.elements.backToMenuBtn.addEventListener("click", returnToMainMenu);
 
 // 綁定難度按鈕事件
 Object.keys(UI.elements.difficultyBtns).forEach(diff => {
@@ -45,7 +73,7 @@ function handleCellClick(cell, index) {
     if (gameState.board[index] !== "" || !gameState.isActive) return;
 
     // 防止在電腦思考時玩家點擊 (PVE 模式下，輪到 O 時禁止玩家操作)
-    if (gameState.mode === "PVE" && gameState.currentPlayer === "O") return;
+    if ((gameState.mode === "PVE" || gameState.mode === "PVE_INFINITE") && gameState.currentPlayer === "O") return;
     
     executeMove(index);
 }
@@ -53,7 +81,7 @@ function handleCellClick(cell, index) {
 // 執行移動邏輯 (統一處理玩家點擊與電腦移動)
 function executeMove(index) {
     // 無限模式邏輯：如果該玩家已經有 3 顆棋子，移除最早的一顆
-    if (gameState.mode === "INFINITE") {
+    if (gameState.mode === "INFINITE" || gameState.mode === "PVE_INFINITE") {
         const history = gameState.moveHistory[gameState.currentPlayer];
         if (history.length >= 3) {
             const removeIndex = history.shift(); // 取出並移除陣列第一個元素
@@ -84,7 +112,7 @@ function executeMove(index) {
     UI.updateStatus(`玩家 ${gameState.currentPlayer} 的回合`);
 
     // 如果是 PvE 輪到電腦
-    if (gameState.mode === "PVE" && gameState.currentPlayer === "O" && gameState.isActive) {
+    if ((gameState.mode === "PVE" || gameState.mode === "PVE_INFINITE") && gameState.currentPlayer === "O" && gameState.isActive) {
         setTimeout(runComputerTurn, 500);
     }
 }
@@ -106,12 +134,12 @@ function startGame(mode) {
     restartGame();
 }
 
-// 返回主選單 (重置所有狀態)
-function returnToMenu() {
+// 返回主選單 (重置所有狀態並回到第一個畫面)
+function returnToMainMenu() {
     resetAllState();
     UI.updateScoreBoard("X", 0);
     UI.updateScoreBoard("O", 0);
-    UI.showStartScreen();
+    UI.showMainMenu();
     UI.hideResultModal();
 }
 
@@ -132,7 +160,7 @@ function handleWin() {
     
     UI.updateScoreBoard(winner, gameState.scores[winner]);
     
-    const winMsg = (gameState.mode === "PVE" && winner === "O") 
+    const winMsg = ((gameState.mode === "PVE" || gameState.mode === "PVE_INFINITE") && winner === "O") 
         ? "電腦 (O) 贏了!" 
         : `玩家 ${winner} 贏了!`;
         
